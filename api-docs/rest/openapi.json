@@ -1,0 +1,57 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "description": "Movie awards API",
+    "version": "1.0.0",
+    "title": "Movie awards API"
+  },
+  "paths": {
+    "/v1/movie": {
+      "post": {
+        "tags": [
+          "AddRatingRequest"
+        ],
+        "description": "receive rating for a given movie title",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddRatingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "request accepted"
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddRatingRequest": {
+        "type": "object",
+        "properties": {
+          "movie_title": {
+            "type": "string"
+          },
+          "user_login": {
+           "type": "string"
+          },
+          "rating": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

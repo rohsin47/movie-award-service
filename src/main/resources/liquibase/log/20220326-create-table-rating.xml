@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+    <changeSet id="20220326-create-table-rating" author="rohsin3247@gmail.com">
+        <createTable tableName="rating">
+            <column name="id" type="INTEGER" autoIncrement= "true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="movie_id" type="integer">
+                <constraints primaryKey="true" primaryKeyName="rating_pkey" foreignKeyName="fk_movie" references="movie(id)" nullable="false" />
+            </column>
+            <column name="user_id" type="integer">
+                <constraints primaryKey="true" primaryKeyName="rating_pkey" foreignKeyName="fk_user" references="account(id)" nullable="false" />
+            </column>
+            <column name="rating" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
+
+
