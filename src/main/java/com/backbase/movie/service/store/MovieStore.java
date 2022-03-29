@@ -13,6 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,7 @@ public class MovieStore {
     public static final String SAVE_RATING_QUERY = "INSERT INTO rating (" + RATING_MOVIE_ID + "," + RATING_USER_ID + "," + RATING + ") VALUES ($1,$2,$3) ";
     public static final String SAVE_MOVIE_QUERY = "INSERT INTO movie (" + MOVIE_TITLE_COLUMN + "," + MOVIE_WON_COLUMN + "," + MOVIE_BOX_OFFICE_COLUMN + ") VALUES ($1,$2,$3) ON CONFLICT (title) DO UPDATE SET title = movie.title, won = movie.won, box_office = movie.box_office;";
     public static final String SAVE_USER_QUERY = "INSERT INTO account (" + ACCOUNT_LOGIN_COLUMN + "," + ACCOUNT_NAME_COLUMN +") VALUES ($1,$2) ";
+    public static final String FIND_TOP_TEN_RATED = "select m.id, m.title, m.won, m.box_office from movie m, rating r where m.id = r.movie_id order by r.rating desc limit 10";
 
     @Inject
     PgPool pgPool;
@@ -50,6 +52,18 @@ public class MovieStore {
                 .execute(Tuple.of(login))
                 .onItem().transform(RowSet::iterator)
                 .onItem().transform(iterator -> iterator.hasNext() ? fromUser(iterator.next()) : null);
+    }
+
+    public Uni<List<Movie>> findTopRated() {
+        return pgPool.query(FIND_TOP_TEN_RATED)
+                .execute()
+                .map(pgRowSet -> {
+                    List<Movie> list = new ArrayList<>(pgRowSet.size());
+                    for (Row row : pgRowSet) {
+                        list.add(fromMovie(row));
+                    }
+                    return list;
+                });
     }
 
     public Uni<Void> save(Movie movie) {

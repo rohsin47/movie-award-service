@@ -6,4 +6,6 @@
     <include file="liquibase/log/20220326-create-table-movie.xml"/>
     <include file="liquibase/log/20220326-create-table-account.xml"/>
     <include file="liquibase/log/20220326-create-table-rating.xml"/>
+    <include file="liquibase/log/20220329-create-table-test-user.xml"/>
+    <include file="liquibase/log/20220329-insert-roles-realm.sql"/>
 </databaseChangeLog>

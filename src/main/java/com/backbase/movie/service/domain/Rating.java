@@ -1,5 +1,9 @@
 package com.backbase.movie.service.domain;
 
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class Rating {
