@@ -1,0 +1,8 @@
+POST http://localhost:8080/v1/movie/registerUser
+Content-Type: application/json
+Authorization: Basic backbase backbase
+
+{
+  "login": "rohit47",
+  "name": "Rohit Singh"
+}

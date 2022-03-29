@@ -1,0 +1,3 @@
+GET http://localhost:8080/v1/movie/topTenRated
+Content-Type: application/json
+Authorization: Basic backbase backbase

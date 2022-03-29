@@ -1,0 +1,39 @@
+POST http://localhost:8080/v1/movie/rating
+Content-Type: application/json
+Authorization: Basic backbase backbase
+
+{
+  "movieTitle": "Million Dollar Baby",
+  "userLogin": "guest",
+  "rating": 9
+}
+###
+POST http://localhost:8080/v1/movie/rating
+Content-Type: application/json
+Authorization: Basic backbase backbase
+
+{
+"movieTitle": "A Beautiful Mind",
+"userLogin": "guest",
+"rating": 7
+}
+###
+POST http://localhost:8080/v1/movie/rating
+Content-Type: application/json
+Authorization: Basic backbase backbase
+
+{
+  "movieTitle": "Elizabeth",
+  "userLogin": "guest",
+  "rating": 10
+}
+###
+POST http://localhost:8080/v1/movie/rating
+Content-Type: application/json
+Authorization: Basic backbase backbase
+
+{
+  "movieTitle": "Jerry Maguire",
+  "userLogin": "guest",
+  "rating": 6
+}
