@@ -32,12 +32,12 @@
 
    Quarkus is used as strategic service framework and is an ideal candidate for building cloud native java applications. Quarkus is fast, light-weight and uses CDI at its core.
    PostgreSQL is used as data store for storing structural data and persistence. There is no ORM solution as direct jdbc approach is faster in this case. 
-   Liquibase is used for tracking and managing database schema changes. 
+   Liquibase is used for tracking anf managing database schema changes. 
    In addition to that, mutiny is used as asynchronous library for writing non-blocking and reactive APIs.
 
 #### How to run the application
 
-   service and postgres both can be run in docker host. for running application locally and testing APIs
+   postgres is being run on docker host, and it is being recomnended to do, and application can be run locally for testing APIs
 
    1. Run the docker compose service yml given in docker folder using below:
       ````
@@ -54,6 +54,7 @@
       BB_MOVIE_DB_HOST=localhost
       BB_MOVIE_DB_PORT=<POSTGRES_FORWARDED_PORT>
       ````
+   3. If docker host is not available, then have to install postgres binaries locally.
 
 #### How to test the application
     
@@ -97,3 +98,12 @@ In order to test APIs, please provide below details:
     "name": "John Doe"
     }
     ````
+
+#### Features could have been implemented, if more time
+
+1. Rating aggregation, right now there is no algorithm for rating aggregation.
+2. Movies data storing with year wise release dates to allow duplicate names.
+3. JWT based bearer token for authorization and securing APIs.
+
+#### Scalability
+

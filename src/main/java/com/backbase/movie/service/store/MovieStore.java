@@ -30,6 +30,7 @@ public class MovieStore {
     private static final String RATING_USER_ID = "user_id";
     private static final String RATING = "rating";
 
+    public static final String FIND_ALL_MOVIES = "select id, title, won, box_office from movie";
     public static final String FIND_BY_TITLE_QUERY = "SELECT " + ID_COLUMN + "," + MOVIE_TITLE_COLUMN + "," + MOVIE_WON_COLUMN + "," + MOVIE_BOX_OFFICE_COLUMN + " FROM movie WHERE title = $1";
     public static final String FIND_BY_USER_QUERY = "SELECT " + ID_COLUMN + "," + ACCOUNT_LOGIN_COLUMN + " FROM account WHERE login = $1";
     public static final String SAVE_RATING_QUERY = "INSERT INTO rating (" + RATING_MOVIE_ID + "," + RATING_USER_ID + "," + RATING + ") VALUES ($1,$2,$3) ";
@@ -39,6 +40,18 @@ public class MovieStore {
 
     @Inject
     PgPool pgPool;
+
+    public Uni<List<Movie>> findAll(){
+        return pgPool.query(FIND_ALL_MOVIES)
+                .execute()
+                .map(pgRowSet -> {
+                    List<Movie> list = new ArrayList<>(pgRowSet.size());
+                    for (Row row : pgRowSet) {
+                        list.add(fromMovie(row));
+                    }
+                    return list;
+                });
+    }
 
     public Uni<Movie> findByTitle(String title) {
         return pgPool.preparedQuery(FIND_BY_TITLE_QUERY)

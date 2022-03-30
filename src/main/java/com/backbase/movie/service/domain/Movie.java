@@ -1,6 +1,7 @@
 package com.backbase.movie.service.domain;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 public class Movie {
 
@@ -32,5 +33,17 @@ public class Movie {
 
     public long getBoxOffice() {
         return boxOffice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Movie movie = (Movie) o;
+        return title.equals(movie.title) && won.equals(movie.won);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, won);
     }
 }

@@ -6,6 +6,7 @@ import com.backbase.movie.service.domain.MovieInfo;
 import com.backbase.movie.service.store.MovieStore;
 import com.opencsv.bean.CsvToBeanBuilder;
 import io.quarkus.runtime.StartupEvent;
+import org.apache.commons.collections4.CollectionUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,39 +28,28 @@ public class CSVProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(CSVProcessor.class);
 
-    @ConfigProperty(name = "BB_MOVIE_DATA_PROCESSED")
-    boolean isCSVProcessed;
-
     @Inject
     MovieStore movieStore;
 
     public void persistData(@Observes StartupEvent sv) throws FileNotFoundException {
-        if(!isCSVProcessed) {
-            List<MovieInfo> movieInfos = new CsvToBeanBuilder(new FileReader(getPath("academy_awards.csv")))
-                    .withType(MovieInfo.class)
-                    .build()
-                    .parse();
+        List<MovieInfo> movieInfos = new CsvToBeanBuilder(new FileReader(getPath("academy_awards.csv")))
+                .withType(MovieInfo.class)
+                .build()
+                .parse();
 
-            log.info("movies info : {}", movieInfos.size());
+        List<Movie> moviesWithAwards = movieInfos.stream()
+                .filter(info -> "Best Picture" .equals(info.getCategory()))
+                .map(info -> new Movie(0, info.getNominee(), info.getWon(), ThreadLocalRandom.current().nextInt(1000000, 2000000)))
+                .collect(Collectors.toList());
 
-            List<Movie> moviesWithAwards = movieInfos.stream()
-                    .filter(info -> "Best Picture".equals(info.getCategory()))
-                    .map(info -> new Movie(0, info.getNominee(), info.getWon(), ThreadLocalRandom.current().nextInt(1000000, 2000000)))
-                    .collect(Collectors.toList());
-
-            log.info("movies with awards : {}", moviesWithAwards.size());
-
-            movieStore.save(moviesWithAwards);
-            movieStore.save(new Account(0, "guest", "John Doe"));
-        } else {
-            log.info("movie data has already been processed");
-        }
+        movieStore.save(moviesWithAwards);
+        movieStore.save(new Account(0, "guest", "John Doe"));
     }
 
     public String getPath(String fileName) {
         try {
             return Paths.get(Objects.requireNonNull(
-                    Thread.currentThread().getContextClassLoader().getResource("/data/" + fileName)).toURI())
+                            Thread.currentThread().getContextClassLoader().getResource("/data/" + fileName)).toURI())
                     .toFile()
                     .getPath();
         } catch (URISyntaxException var3) {
