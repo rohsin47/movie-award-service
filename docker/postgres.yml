@@ -4,7 +4,7 @@ services:
     logging:
       driver: local
     ports:
-      - ${POSTGRES_PORT}:5432
+      - 9446:5432
     volumes:
       - postgres-volume:/var/postgresql_data
     environment:

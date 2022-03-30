@@ -47,7 +47,7 @@
    2. If running the application in the same docker host where postgres is running, then run the application with below environment variables:
       ````
       BB_MOVIE_DB_HOST=localhost
-      BB_MOVIE_DB_PORT=5432
+      BB_MOVIE_DB_PORT=9446
       ````
       if running the application in a different host other than postgres host, then kindly set the port forwarding and run the application with below environment variables:
       ````
