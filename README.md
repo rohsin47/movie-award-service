@@ -107,3 +107,9 @@ In order to test APIs, please provide below details:
 
 #### Scalability
 
+1. Make REST APIs asynchronous and non blocking in nature, use callbacks if client needs synchronous response on async API.
+2. Horizontal scaling, by having more number of instances.
+3. Add a load balancer in front.
+4. Data caching for frequest data hits.
+5. if above is still not sufficient, move to event bus architecure and queuing.
+
