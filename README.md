@@ -15,6 +15,7 @@
    The below assumptions have been made in absence of requirements gap:
    1. API requires to provide a list of top ten rated movies ordered by box office value. but enclosed csv data does not have box office value. so, required data is filled using random generator.
    2. API expects an API token from caller but there has been no mention of what kind of API token and provider to be used, plus it adds complexity to the solution, so basic authorization have been used for securing rest endpoints.
+   3. There is no information on user like how we store accounts, so default user account "__guest__" is created for rating movies. This is done because then ratings data would not be reliable and keep overiding. API is also provided to register new user accounts.
 
 #### Solution design
 
@@ -27,9 +28,72 @@
    * Docker
    * Quarkus
    * PostgreSQL
+   * Liquibase
 
    Quarkus is used as strategic service framework and is an ideal candidate for building cloud native java applications. Quarkus is fast, light-weight and uses CDI at its core.
-   PostgreSQL is used as data store for storing structural data needs and persistence. There is no ORM solution as direct jdbc approach is faster in this case. 
-   in addition to that, mutiny is used as asynchronous library for writing non-blocking and reactive APIs
-   
+   PostgreSQL is used as data store for storing structural data and persistence. There is no ORM solution as direct jdbc approach is faster in this case. 
+   Liquibase is used for tracking anf managing database schema changes. 
+   In addition to that, mutiny is used as asynchronous library for writing non-blocking and reactive APIs.
 
+#### How to run the application
+
+   service and postgres both can be run in docker host. for running application locally and testing APIs
+
+   1. Run the docker compose service yml given in docker folder using below:
+      ````
+      docker-compose -f postgres.yml up -d
+      ````
+   
+   2. If running the application in the same docker host where postgres is running, then run the application with below environment variables:
+      ````
+      BB_MOVIE_DB_HOST=localhost
+      BB_MOVIE_DB_PORT=5432
+      ````
+      if running the application in a different host other than postgres host, then kindly set the port forwarding and run the application with below environment variables:
+      ````
+      BB_MOVIE_DB_HOST=localhost
+      BB_MOVIE_DB_PORT=<POSTGRES_FORWARDED_PORT>
+      ````
+
+#### How to test the application
+    
+The application expects authorization in order to access API endpoints. User must have role of "__backbase__" in order to access API endpoints.
+In order to test APIs, please provide below details:
+
+    userid - backbase
+    passowrd - backbase
+
+* Has movie won oscar
+    ````
+    http://localhost:8080/v1/movie/hasWonOscar?title=<movie title>
+    ````
+
+* Post rating for movie
+    ````
+    POST http://localhost:8080/v1/movie/rating
+    Content-Type: application/json
+    Authorization: Basic backbase backbase
+
+     {
+      "movieTitle": "Million Dollar Baby",
+      "userLogin": "guest",
+      "rating": 8
+     }
+    ````
+  
+* Get top ten rated ordered by box office value
+    ````
+    http://localhost:8080/v1/movie/topTenRated
+    ````
+
+* Register new user
+    ````
+    POST http://localhost:8080/v1/movie/registerUser
+    Content-Type: application/json
+    Authorization: Basic backbase backbase
+
+    {
+    "login": "guest",
+    "name": "John Doe"
+    }
+    ````
