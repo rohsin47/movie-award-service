@@ -32,7 +32,7 @@
 
    Quarkus is used as strategic service framework and is an ideal candidate for building cloud native java applications. Quarkus is fast, light-weight and uses CDI at its core.
    PostgreSQL is used as data store for storing structural data and persistence. There is no ORM solution as direct jdbc approach is faster in this case. 
-   Liquibase is used for tracking anf managing database schema changes. 
+   Liquibase is used for tracking and managing database schema changes. 
    In addition to that, mutiny is used as asynchronous library for writing non-blocking and reactive APIs.
 
 #### How to run the application
