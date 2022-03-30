@@ -44,15 +44,17 @@ public class MovieResource {
     @RolesAllowed("backbase")
     @Blocking
     public Response postRating(@Valid AddRatingRequest addRatingRequest) throws ServiceError {
+        log.info("Posting rating for movie : [{}] by user : [{}]", addRatingRequest.getMovieTitle(), addRatingRequest.getUserLogin());
         Movie movie = movieStore.findByTitle(addRatingRequest.getMovieTitle()).await().atMost(Duration.ofSeconds(5));
         if (movie == null) {
-            throw ServiceError.getInstance(Response.Status.NOT_FOUND, "movie title does not exist %s", addRatingRequest.toString());
+            throw ServiceError.getInstance(Response.Status.BAD_REQUEST, "movie title does not exist [%s]", addRatingRequest.getMovieTitle());
         }
         Account account = movieStore.findByLogin(addRatingRequest.getUserLogin()).await().atMost(Duration.ofSeconds(5));
         if (account == null) {
-            account = movieStore.findByLogin("anonymous").await().atMost(Duration.ofSeconds(1));
+            account = movieStore.findByLogin("guest").await().atMost(Duration.ofSeconds(1));
         }
-        return movieStore.save(new Rating(0, movie, account, addRatingRequest.getRating())).await().atMost(Duration.ofSeconds(5));
+        movieStore.save(new Rating(0, movie, account, addRatingRequest.getRating()));
+        return Response.accepted().build();
     }
 
     @GET
@@ -70,7 +72,7 @@ public class MovieResource {
     @POST
     @RolesAllowed("backbase")
     @Path("/registerUser")
-    public Response createAccount(@Valid AddAccountRequest addAccountRequest) throws ServiceError {
+    public Response createAccount(@Valid AddAccountRequest addAccountRequest) {
         movieStore.save(new Account(0, addAccountRequest.getLogin(), addAccountRequest.getName()));
         return Response.accepted().build();
     }

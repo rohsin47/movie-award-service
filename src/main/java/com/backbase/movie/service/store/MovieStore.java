@@ -72,11 +72,10 @@ public class MovieStore {
                 .replaceWithVoid();
     }
 
-    public void save(Account account) {
-        pgPool.preparedQuery(SAVE_USER_QUERY)
+    public Uni<Void> save(Account account) {
+        return pgPool.preparedQuery(SAVE_USER_QUERY)
                 .execute(Tuple.of(account.getLogin(), account.getName()))
-                .ifNoItem().after(Duration.ofSeconds(30)).fail()
-                .await().indefinitely();
+                .replaceWithVoid();
     }
 
     public void save(List<Movie> movies) {
@@ -87,11 +86,10 @@ public class MovieStore {
                 .await().indefinitely();
     }
 
-    public Uni<Response> save(Rating rating) {
+    public Uni<Void> save(Rating rating) {
         return pgPool.preparedQuery(SAVE_RATING_QUERY)
                 .execute(Tuple.of(rating.getMovie().getId(), rating.getUser().getId(), rating.getRating()))
-                .onItem()
-                .transform(inserted -> Response.accepted().build());
+                .replaceWithVoid();
     }
 
     private Movie fromMovie(Row row) {
